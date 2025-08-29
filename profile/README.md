@@ -1,37 +1,93 @@
-# qqq
+# QQQ - Low-code Application Framework for Engineers
 
-This is the top-level/parent project of qqq.
+[![License: AGPL v3](https://img.shields.io/badge/License-AGPL%20v3-blue.svg)](https://www.gnu.org/licenses/agpl-3.0)
+[![Maven Central](https://img.shields.io/maven-central/v/com.kingsrook.qqq/qqq-backend-core)](https://search.maven.org/artifact/com.kingsrook.qqq/qqq-backend-core)
+[![Java](https://img.shields.io/badge/Java-17+-orange.svg)](https://adoptium.net/)
 
-QQQ is a Low-code Application Framework for Engineers.
+> **Build powerful applications faster with QQQ's modular, enterprise-ready framework**
 
-## Artifacts
-QQQ can be used with a single bundle or smaller fine grained jars.
-The bundle contains all of the sub-jars.  It is named:
+QQQ is a comprehensive low-code application framework designed specifically for engineers who need to rapidly develop robust, scalable applications without sacrificing flexibility or performance. Built with modern Java technologies, QQQ provides the building blocks you need to create everything from simple utilities to complex enterprise systems.
 
-```qqq-${version}.jar```
+## 🚀 What Makes QQQ Special?
 
-You can also use fine-grained jars:
-- `qqq-backend-core`: The core module.  Useful if you're developing other modules.
-- `qqq-backend-module-rdbms`: Backend module for working with Relational Databases.
-- `qqq-backend-module-filesystem`: Backend module for working with Filesystems (including AWS S3).
-- `qqq-middleware-javalin`: Middleware http server.  Procivdes REST API, and/or backing for a web frotnend.
-- `qqq-middleware-picocli`: Middleware (actually, a front-end, innint?) Command Line interface.
+- **Engineer-First Design**: Built by engineers, for engineers - no unnecessary abstractions or magic
+- **Modular Architecture**: Use only what you need, or bundle everything together
+- **Enterprise Ready**: Production-tested with comprehensive testing, security, and monitoring
+- **Modern Java**: Built on Java 17+ with contemporary best practices
+- **Open Source**: Full transparency with AGPL v3 licensing
 
-## License
-QQQ - Low-code Application Framework for Engineers. \
-Copyright (C) 2020-2024.  Kingsrook, LLC \
-651 N Broad St Ste 205 # 6917 | Middletown DE 19709 | United States \
-contact@kingsrook.com | https://github.com/Kingsrook/
+## 🏗️ Core Framework
 
-This program is free software: you can redistribute it and/or modify
-it under the terms of the GNU Affero General Public License as
-published by the Free Software Foundation, either version 3 of the
-License, or (at your option) any later version.
+### Backend Modules
+- **`qqq-backend-core`** - The foundation of the QQQ ecosystem. Essential for all QQQ applications, providing core services, configuration management, and plugin architecture.
+- **`qqq-backend-module-rdbms`** - Comprehensive relational database support with connection pooling, transaction management, and query optimization.
+- **`qqq-backend-module-filesystem`** - Unified file system operations supporting local storage, cloud storage (AWS S3), and custom storage backends.
+- **`qqq-backend-module-mongodb`** - Native MongoDB integration with document modeling and aggregation pipeline support.
+- **`qqq-backend-module-sqlite`** - Lightweight, embedded database support for applications requiring local data persistence.
 
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU Affero General Public License for more details.
+### Middleware & Interfaces
+- **`qqq-middleware-javalin`** - High-performance HTTP server providing REST APIs, WebSocket support, and web application backing.
+- **`qqq-middleware-picocli`** - Feature-rich command-line interface framework for building powerful CLI applications.
+- **`qqq-middleware-lambda`** - AWS Lambda integration for serverless application deployment.
+- **`qqq-middleware-slack`** - Slack bot and integration framework for team collaboration tools.
 
-You should have received a copy of the GNU Affero General Public License
-along with this program.  If not, see <https://www.gnu.org/licenses/>.
+### Development Tools
+- **`qqq-openapi`** - OpenAPI/Swagger specification generation and management.
+- **`qqq-language-support-javascript`** - JavaScript runtime integration and scripting capabilities.
+- **`qqq-utility-lambdas`** - Common utility functions and helpers for AWS Lambda deployments.
+
+## 📦 Getting Started
+
+### Quick Start with Maven
+
+```xml
+<dependency>
+    <groupId>com.kingsrook.qqq</groupId>
+    <artifactId>qqq-backend-core</artifactId>
+    <version>0.27.0-SNAPSHOT</version>
+</dependency>
+```
+
+### Bundle Installation
+
+For a complete QQQ experience, use the main bundle:
+
+```xml
+<dependency>
+    <groupId>com.kingsrook.qqq</groupId>
+    <artifactId>qqq</artifactId>
+    <version>0.27.0-SNAPSHOT</version>
+</dependency>
+```
+
+### Gradle
+
+```gradle
+implementation 'com.kingsrook.qqq:qqq-backend-core:0.27.0-SNAPSHOT'
+```
+
+## 🌐 Resources & Community
+
+- **🌍 Website**: [www.qrun.io](https://www.qrun.io) - Learn more about QQQ and Kingsrook
+- **📚 Documentation**: [GitHub Wiki](https://github.com/Kingsrook/qqq/wiki) - Comprehensive guides and API references
+- **🐛 Issues & Support**: [GitHub Issues](https://github.com/Kingsrook/qqq/issues) - Report bugs, request features, or get help
+- **💬 Discussions**: [GitHub Discussions](https://github.com/Kingsrook/qqq/discussions) - Community forums and Q&A
+- **📖 API Reference**: [Javadoc](https://kingsrook.github.io/qqq/) - Complete API documentation
+
+## 🏢 About Kingsrook
+
+QQQ is developed and maintained by [Kingsrook, LLC](https://qrun.io), a technology company focused on building tools that make engineers more productive. We believe in open source, transparency, and creating solutions that actually solve real problems.
+
+**Contact**: [contact@qrun.io](mailto:contact@qrun.io)  
+**Website**: [www.qrun.io](https://www.qrun.io)  
+**GitHub**: [github.com/Kingsrook](https://github.com/Kingsrook)
+
+## 📄 License
+
+This project is licensed under the GNU Affero General Public License v3.0 - see the [LICENSE](LICENSE.txt) file for details.
+
+---
+
+**Built with ❤️ by engineers, for engineers**
+
+*QQQ - Empowering developers to build better applications, faster.*
