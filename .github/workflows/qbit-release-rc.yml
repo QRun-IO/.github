@@ -1,0 +1,73 @@
+# Cut the next release candidate of a qbit (QRun-IO/qqq docs/QRUN-QBIT-REPO-STANDARD.md, C6).
+#
+# Called from each qbit's .github/workflows/release-rc.yml on a manual dispatch or when a
+# develop PR labelled `release:rc` is merged. It merges develop into the release line through
+# the GitHub API (GitHub signs the merge commit), and the push of release/* runs the existing
+# CircleCI publish_release_candidate workflow (qqq-orb: RC bump, Maven Central, tag). Nothing
+# here publishes, tags or touches hotfix/* branches.
+#
+# Release line: develop's <revision>X.Y.Z-SNAPSHOT</revision> picks release/X.Y.Z if that branch
+# exists, else release/X.Y (created from develop when missing).
+name: qbit release candidate
+
+on:
+  workflow_call:
+    inputs:
+      dry_run:
+        description: Print the plan without merging or creating branches
+        type: boolean
+        default: false
+
+permissions:
+  contents: write
+
+jobs:
+  cut-rc:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    concurrency:
+      group: qbit-release-rc-${{ github.repository }}
+      cancel-in-progress: false
+    steps:
+      - name: Merge develop into the release line
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
+          DRY_RUN: ${{ inputs.dry_run }}
+        run: |
+          set -euo pipefail
+          develop_sha=$(gh api "repos/$REPO/branches/develop" -q .commit.sha)
+          revision=$(gh api "repos/$REPO/contents/pom.xml?ref=$develop_sha" -q .content | base64 -d \
+            | sed -n 's:.*<revision>\(.*\)</revision>.*:\1:p' | head -n 1)
+          if [[ ! "$revision" =~ ^([0-9]+)\.([0-9]+)\.([0-9]+)-SNAPSHOT$ ]]; then
+            echo "::error::develop pom.xml <revision> must be X.Y.Z-SNAPSHOT, found '$revision'"
+            exit 1
+          fi
+          full="${BASH_REMATCH[1]}.${BASH_REMATCH[2]}.${BASH_REMATCH[3]}"
+          line="${BASH_REMATCH[1]}.${BASH_REMATCH[2]}"
+          branch_exists() { gh api "repos/$REPO/branches/$1" --silent 2>/dev/null; }
+          if branch_exists "release/$full"; then branch="release/$full"
+          elif branch_exists "release/$line"; then branch="release/$line"
+          else branch=""; fi
+
+          if [[ -z "$branch" ]]; then
+            branch="release/$line"
+            echo "Plan: create $branch from develop $develop_sha (first RC of $full)"
+            [[ "$DRY_RUN" == true ]] && exit 0
+            gh api "repos/$REPO/git/refs" -f ref="refs/heads/$branch" -f sha="$develop_sha" --silent
+          else
+            echo "Plan: merge develop $develop_sha into $branch"
+            [[ "$DRY_RUN" == true ]] && exit 0
+            # 201 merged, 204 already up to date (nothing new to release), 409 conflict.
+            response=$(gh api --include "repos/$REPO/merges" -f base="$branch" -f head="$develop_sha" \
+              -f commit_message="Merge develop into $branch for the next $full RC" 2>&1) || true
+            status=$(printf '%s\n' "$response" | sed -n 's:^HTTP/[0-9.]* \([0-9][0-9]*\).*:\1:p' | head -n 1)
+            case "$status" in
+              201) ;;
+              204) echo "::warning::$branch already contains develop; no new RC"; exit 0 ;;
+              409) echo "::error::Merge conflict between develop and $branch; resolve it in a PR into $branch"; exit 1 ;;
+              *) echo "::error::Merge of develop into $branch failed (HTTP ${status:-unknown})"; exit 1 ;;
+            esac
+          fi
+          echo "Pushed $branch; CircleCI publish_release_candidate cuts the RC." >> "$GITHUB_STEP_SUMMARY"
+          echo "Release line: $branch" >> "$GITHUB_STEP_SUMMARY"
