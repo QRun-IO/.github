@@ -5,12 +5,12 @@ version: 2.1
 jobs:
   actionlint:
     docker:
-      - image: rhysd/actionlint:1.7.7
+      - image: cimg/go:1.24
     steps:
       - checkout
       - run:
           name: Lint GitHub Actions workflows
-          command: actionlint -color .github/workflows/*.yml
+          command: go run github.com/rhysd/actionlint/cmd/actionlint@v1.7.7 -color .github/workflows/*.yml
 
 workflows:
   lint:
