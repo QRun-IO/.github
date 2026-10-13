@@ -1,0 +1,18 @@
+# The org's CircleCI GitHub App builds every repository; without a config this repository
+# reported "No configuration was found" as an error on every commit. Lint the workflows instead.
+version: 2.1
+
+jobs:
+  actionlint:
+    docker:
+      - image: rhysd/actionlint:1.7.7
+    steps:
+      - checkout
+      - run:
+          name: Lint GitHub Actions workflows
+          command: actionlint -color .github/workflows/*.yml
+
+workflows:
+  lint:
+    jobs:
+      - actionlint
