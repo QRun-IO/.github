@@ -116,7 +116,9 @@ jobs:
             echo "::error::QRUN_TAG_SIGNING_KEY is not available (the caller needs 'secrets: inherit'); not creating an unsigned tag. The release captain tags this RC."
             exit 1
           fi
+          # The project's own artifactId: skip the <parent> block (qbit-build-parent).
           artifact=$(gh api "repos/$REPO/contents/pom.xml?ref=$MERGE_SHA" -q .content | base64 -d \
+            | sed '/<parent>/,/<\/parent>/d' \
             | sed -n 's:.*<artifactId>\(qbit-[^<]*\)</artifactId>.*:\1:p' | head -n 1)
           group_path=com/kingsrook/qbits
 
