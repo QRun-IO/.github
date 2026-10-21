@@ -1,0 +1,14 @@
+name: Workflow lint
+'on':
+  push:
+    branches:
+    - '**'
+  pull_request: null
+  workflow_dispatch: null
+permissions:
+  contents: read
+jobs:
+  actionlint:
+    uses: QRun-IO/qqq-orb/.github/workflows/workflow-lint.yml@bfd41c8e0d9adb6ee25f3cc8f7f2eb7da9b28d3c
+    if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name
+      != github.repository
