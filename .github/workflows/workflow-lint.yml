@@ -9,6 +9,6 @@ permissions:
   contents: read
 jobs:
   actionlint:
-    uses: QRun-IO/qqq-orb/.github/workflows/workflow-lint.yml@bfd41c8e0d9adb6ee25f3cc8f7f2eb7da9b28d3c
+    uses: QRun-IO/qqq-orb/.github/workflows/workflow-lint.yml@0f33ddadf88b9a1b940b8883782fe2000ee1d2bd
     if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name
       != github.repository
